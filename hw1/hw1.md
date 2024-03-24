@@ -76,6 +76,24 @@
 
 ## T5  Encrypt/Decrypt/Sign through openssl
 
+### (a)-(b)
+![](./img/2-1.png)
+1. `openssl rand -hex 16` 生成128位密钥与随机向量
+2. `openssl enc -e -aes-128-cbc -in message -out enc_message -K <key> -iv <initial vector>` 加密
+3. `openssl enc -d -aes-128-cbc -in enc_message -out dec_message -K <key> -iv <initial vector>` 解密
+**对比解密文件与原文件，无误。**
+
+### (c)-（e）
+![](./img/2-2.png)
+1. `openssl genrsa -out privkey.pem` 生成私钥
+2. `openssl rsa -in privkey.pem -pubout -out pubkey.pem` 生成公钥
+3. `openssl dgst -sha256 message` 计算消息SHA256 hash值
+4. `openssl dgst -sha256 -sign privkey.pem -out signature message` 生成签名
+5. `openssl base64 -in signature` 使用base64编码输出签名
+6. `openssl dgst -sha256 -verify pubkey.pem -signature signature message` 验证签名
+
+**最终结果：Verified OK**
+
 ---
 
 ## T6
