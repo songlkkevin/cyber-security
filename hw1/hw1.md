@@ -81,6 +81,7 @@
 1. `openssl rand -hex 16` 生成128位密钥与随机向量
 2. `openssl enc -e -aes-128-cbc -in message -out enc_message -K <key> -iv <initial vector>` 加密
 3. `openssl enc -d -aes-128-cbc -in enc_message -out dec_message -K <key> -iv <initial vector>` 解密
+
 **对比解密文件与原文件，无误。**
 
 ### (c)-（e）
@@ -170,3 +171,6 @@ Cons:这是一篇密码学论文，对于该如何评判一个密码学论文不
 ----
 
 ## Contribution
+
+- 宋林恺：完成T1，T2，T6
+- 罗胤玻：完成T3，T4，T5
