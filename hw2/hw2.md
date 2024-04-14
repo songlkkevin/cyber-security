@@ -94,6 +94,25 @@ and debuggers
 -------
 
 ## T6 A lab to understand user/password management on Unix/Linux
+### a
+![](./img/T6-1.png)
+
+### b
+![](./img/T6-2.png)
+
+### c
+[参考文章](https://www.maoyingdong.com/linuxetcshadow-tjtzt/)
+密码以`$id$salt$hashed`的形式存储在`/etc/shadow`文件中，其中`id`表示加密算法，`salt`是随机数，`hashed`是加密后的密码。
+
+### d
+使用openssl工具对密码进行加密，结果如下：
+![](./img/T6-3.png)
+
+与b中图中的结果相同
+
+### e
+设置密码为`1234567890`，重做b、d,最终结果吻合。
+![T6-4](./img/T6-4.png)
 
 ------
 
