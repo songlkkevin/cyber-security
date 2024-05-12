@@ -12,13 +12,67 @@ standard判断条件是:协议、域名和端口。若仅仅通过域名判断�
 
 ## T2 New Extensions to DNS
 
+### a
+**DNS-over-HTTPS protects**：通过使用HTTPS加密，防止第三方拦截和篡改DNS，也即可以抵御DNS欺骗和中间人攻击。
+
+### b
+**DNS-over-HTTPS does not protect**：HTTPS仅保护客户端到DNS解析器的通信，但是DNS解析器到目标服务器的通信并没有加密，所以，DNS-over-HTTPS并不能防御对服务器端的攻击，比如DNS缓存投毒。
+
+### c
+DoH和DoT不能抵御DNS被作为DDoS放大器使用的攻击，因为这种攻击是通过向DNS服务器发送大量的请求，使其返回大量的响应，从而使目标服务器受到攻击。而DoH和DoT只是对DNS请求进行加密，但是并没有对DNS请求的数量进行限制，所以无法防御DDoS攻击。
+
+### d
+DoH和DoT不能抵御DNS重绑定攻击，因为DNS重绑定攻击是通过将域名解析到不同的IP地址，从而绕过浏览器的同源策略，从而进行攻击。而DoH和DoT只是对DNS请求进行加密，仅保护从客户端到DNS解析器，所以无法防御DNS重绑定攻击。
+
 ----------
 
 ## T3 Cross Site Script Inclusion (XSSI) Attacks
 
+### a
+`evil.com`的页面嵌入一个`<script>`标签，指向`bank.com`的`userdata.js`文件，然后重写`displayData`函数来获取John Doe的信息。当John Doe登录`bank.com`后，访问`evil.com`，`evil.com`便会加载`bank.com/userdata.js`并执行`displayData`，将数据发送给`evil.com`
+
+代码示意：
+```javascript
+<script>
+function displayData(data) {
+    fetch('https://bank.com/sendData', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+}
+</script>
+<script src="//bank.com/userdata.js"></script>
+
+```
+
+### b
+使用CORS限制`bank.com`域名才可访问`userdata.js`，此时，服务器会为`userdata.js`返回一个`Access-Control-Allow-Origin`头，指定允许访问的域名。`evil.com`无法访问`userdata.js`，因此无法获取John Doe的信息。
+代码修改为：
+```javascript
+<script src="//bank.com/userdata.js" crossorigin="anonymous"> </script>
+```
+
 ----------
 
 ## T4 CSRF Defenses
+
+### a
+CSRF攻击：攻击者诱使在登录状态下的用户访问恶意网站，从而利用用户的身份信息向目标网站发送请求，实现攻击。
+
+### b
+`token`通常由某种随机或加密算法生成，用户的`token`被保护在浏览器页面的DOM中，攻击者无法访问，而在服务器端，用户的操作生效前必须验证其`token`，以此来防止CSRF攻击。
+
+### c
+这样可以防止CSRF攻击，因为随机生成的字符串是难以预测的，攻击者将不能在极短时间内生成一个有效的`token`，从而无法伪造用户的请求。
+
+### d
+这样不能有效防止CSRF攻击，因为此时`token`是固定的，攻击者可以在恶意网站上获取到这段时间的`token`，然后伪造用户的请求，从而实现CSRF攻击。
+
+### e
+同源策略可以防止攻击者获取服务器端的`token`，若不使用同源策略，攻击者可以通过恶意网站获取到用户的`token`，从而实现CSRF攻击。
 
 ----------
 
