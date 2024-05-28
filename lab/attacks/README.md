@@ -59,3 +59,36 @@
 
 ## d.txt
 和`c.txt`的原理相同，获取`cookie`后，修改`bitbars`字段即可
+
+## e.txt
+
+该题为SQL Injection，我们在`router.js`中找到如下代码：
+```javascript
+const query = `DELETE FROM Users WHERE username == "${req.session.account.username}";`;
+```
+
+没有做任何的过滤，所以可以直接注入SQL语句，删除数据库中的数据。我使用的SQL语句如下：
+```
+user3" OR username LIKE "user3%";#
+```
+\#可以将之后的语句全部注释，在删除时就是删除所有以user3开头的用户。
+
+## f.txt
+
+该题是XSS, 我们可以在代码中发现
+```javascript
+<% if (result.username && result.profile) { %>
+    <div id="profile"><%- result.profile %></div>
+<% } %>
+```
+那么profile是要执行的。
+所以我们通过通过XSS发送transfer请求进行转账，之后再通过发送set_profile请求将profile复制到查看的用户上，这样就可以实现XSS worm攻击。
+
+## g.txt
+
+本题是侧信道攻击，我们再transfer请求中，可以看到
+```javascript
+<input type="text" name="destination_username" value="<%= result.receiver %>">
+```
+
+由于使用的是<%=>会进行一些filter，经过查阅资料，发现可以改变一些TAG绕过filter，所以我们将img改为imG,script改为scripT，这样就可以绕过filter，将脚本注入到页面中进行登录操作。
